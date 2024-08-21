@@ -14,11 +14,10 @@ using System.Threading.Tasks;
 
 namespace Core.Persistence.Repositories;
 
-    public class EfRepositoryBase<TEntity, TEntityId, TContext>
-    : IAsyncRepository<TEntity, TEntityId>, IRepository<TEntity, TEntityId>
+public class EfRepositoryBase<TEntity,TEntityId,TContext>
+    :IAsyncRepository<TEntity, TEntityId>, IRepository<TEntity, TEntityId>
     where TEntity : Entity<TEntityId>
     where TContext : DbContext
-
 {
     protected readonly TContext Context;
 
@@ -26,6 +25,7 @@ namespace Core.Persistence.Repositories;
     {
         Context = context;
     }
+
     public async Task<TEntity> AddAsync(TEntity entity)
     {
         entity.CreatedDate = DateTime.UtcNow;
@@ -48,16 +48,16 @@ namespace Core.Persistence.Repositories;
         IQueryable<TEntity> queryable = Query();
         if (!enableTracking)
             queryable = queryable.AsNoTracking();
-        if (withDeleted)
+        if(withDeleted)
             queryable = queryable.IgnoreQueryFilters();
-        if (predicate != null)
+        if(predicate !=null)
             queryable = queryable.Where(predicate);
         return await queryable.AnyAsync(cancellationToken);
     }
 
     public async Task<TEntity> DeleteAsync(TEntity entity, bool permanent = false)
     {
-        await SetEntityAsDeletedAsync(entity, permanent);
+        await SetEntityAsDeletedAsync(entity,permanent);
         await Context.SaveChangesAsync();
         return entity;
     }

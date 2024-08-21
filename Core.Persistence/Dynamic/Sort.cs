@@ -16,6 +16,7 @@ public class Sort
         Field = string.Empty;
         Dir = string.Empty;
     }
+
     public Sort(string field, string dir)
     {
         Field = field;

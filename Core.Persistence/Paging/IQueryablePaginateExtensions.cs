@@ -16,8 +16,9 @@ public static class IQueryablePaginateExtensions
         CancellationToken cancellationToken = default
         )
     {
-        int count = await source.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<T> items = await source.Skip(index*size).Take(size).ToListAsync(cancellationToken).ConfigureAwait(false);
+        int count  = await source.CountAsync( cancellationToken ).ConfigureAwait(false);
+
+        List<T> items = await source.Skip(index * size).Take(size).ToListAsync(cancellationToken).ConfigureAwait(false);
 
         Paginate<T> list = new()
         {
@@ -27,6 +28,24 @@ public static class IQueryablePaginateExtensions
             Size = size,
             Pages = (int)Math.Ceiling(count / (double)size)
         };
+        return list;
+
+    }
+
+    public static Paginate<T> ToPaginate<T>(this IQueryable<T> source, int index, int size)
+    {
+        int count = source.Count();
+        var items = source.Skip(index * size).Take(size).ToList();
+
+        Paginate<T> list =
+            new()
+            {
+                Index = index,
+                Size = size,
+                Count = count,
+                Items = items,
+                Pages = (int)Math.Ceiling(count / (double)size)
+            };
         return list;
     }
 }
