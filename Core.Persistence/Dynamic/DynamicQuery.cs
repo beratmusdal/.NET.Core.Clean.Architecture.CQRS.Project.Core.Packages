@@ -13,7 +13,7 @@ public class DynamicQuery
 
     public DynamicQuery()
     {
-        
+
     }
 
     public DynamicQuery(IEnumerable<Sort>? sort, Filter? filter)
